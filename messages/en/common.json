@@ -1,0 +1,37 @@
+{
+  "title": "Simple Next.js Project",
+  "blurb": "A clean foundation with Tailwind and dark mode.",
+  "docs": "Documentation",
+  "templates": "Templates",
+  "edit": "Edit",
+  "theme_light": "Light",
+  "theme_dark": "Dark",
+  "theme_system": "System",
+  "subtitle": "The available translation is Arabic",
+  "notFound": {
+    "title": "Page Not Found",
+    "message": "The page you’re looking for doesn’t exist.",
+    "back": "Back to Home"
+  },
+  "error": {
+    "title": "Something Went Wrong",
+    "message": "An unexpected error occurred.",
+    "retry": "Try Again"
+  },
+  "consent": {
+    "title": "We use cookies",
+    "description": "We use cookies to enhance your experience, analyze traffic and show relevant content.",
+    "acceptAll": "Accept all",
+    "rejectAll": "Reject all",
+    "manage": "Manage",
+    "save": "Save preferences",
+    "necessary": "Strictly necessary",
+    "analytics": "Analytics",
+    "marketing": "Marketing",
+    "preferences": "Preferences",
+    "alwaysOn": "Always on",
+    "close": "Close"
+  ,
+  "change": "Cookie settings"
+  }
+}

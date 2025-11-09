@@ -1,0 +1,237 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - beta
+      - alpha
+      - 'feature/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Commitlint
+        uses: wagoid/commitlint-github-action@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: i18n key parity
+        run: pnpm i18n:check
+
+      - name: Unit tests with coverage
+        run: pnpm test -- --coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          fail_ci_if_error: true
+          verbose: true
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: pnpm test:e2e
+
+  storybook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Storybook
+        run: pnpm build-storybook
+
+  release:
+    needs: [test, e2e, storybook, lighthouse]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta' || github.ref == 'refs/heads/alpha')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Storybook assets (for release upload)
+        run: pnpm build-storybook
+
+      - name: Build app (production)
+        run: pnpm build
+
+      - name: Upload Sentry release & source maps
+        if: env.SENTRY_AUTH_TOKEN && env.SENTRY_ORG && env.SENTRY_PROJECT
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: production
+          ignore_empty: true
+          set_commits: auto
+          sourcemaps: .next
+          version: ${{ github.sha }}
+
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build app
+        run: pnpm build
+
+      - name: Run Lighthouse CI
+        run: pnpm exec lhci autorun --config=./lighthouserc.json
+
+      - name: Deploy Storybook to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: storybook-static
+          commit_message: "docs(storybook): deploy"
+
+      - name: Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: pnpm exec semantic-release
+
+  notify:
+    name: Slack Notify
+    needs: [test, e2e, storybook, lighthouse, release]
+    runs-on: ubuntu-latest
+    if: always() && github.event_name == 'push'
+    steps:
+      - name: Send Slack notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
+          SLACK_USERNAME: CI Bot
+          SLACK_ICON: 🧪
+          SLACK_TITLE: "${{ github.workflow }} on ${{ github.ref_name }} @ ${{ github.sha }}"
+          SLACK_MESSAGE: |
+            Repository: ${{ github.repository }}
+            Actor: ${{ github.actor }}
+            Results:
+            - test: ${{ needs.test.result }}
+            - e2e: ${{ needs.e2e.result }}
+            - storybook: ${{ needs.storybook.result }}
+            - lighthouse: ${{ needs.lighthouse.result }}
+            - release: ${{ needs.release.result }}
+            Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          SLACK_COLOR: ${{ (needs.test.result == 'failure' || needs.e2e.result == 'failure' || needs.storybook.result == 'failure' || needs.lighthouse.result == 'failure' || needs.release.result == 'failure') && 'danger' || 'good' }}
+
+  notify_pr:
+    name: Slack Notify (PR)
+    needs: [test, e2e, storybook, lighthouse]
+    runs-on: ubuntu-latest
+    if: always() && github.event_name == 'pull_request'
+    steps:
+      - name: Send Slack notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
+          SLACK_USERNAME: CI Bot
+          SLACK_ICON: 🧪
+          SLACK_TITLE: "PR #${{ github.event.number }}: ${{ github.event.pull_request.title }}"
+          SLACK_MESSAGE: |
+            Repository: ${{ github.repository }}
+            Author: ${{ github.event.pull_request.user.login }}
+            Branch: ${{ github.head_ref }} → ${{ github.base_ref }}
+            Results:
+            - test: ${{ needs.test.result }}
+            - e2e: ${{ needs.e2e.result }}
+            - storybook: ${{ needs.storybook.result }}
+            - lighthouse: ${{ needs.lighthouse.result }}
+            PR: ${{ github.server_url }}/${{ github.repository }}/pull/${{ github.event.number }}
+          SLACK_COLOR: ${{ (needs.test.result == 'failure' || needs.e2e.result == 'failure' || needs.storybook.result == 'failure' || needs.lighthouse.result == 'failure') && 'danger' || 'good' }}

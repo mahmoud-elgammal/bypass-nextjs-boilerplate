@@ -1,0 +1,39 @@
+{
+  "branches": [
+    "main",
+    { "name": "beta", "channel": "beta", "prerelease": true },
+    { "name": "alpha", "channel": "alpha", "prerelease": "alpha" }
+  ],
+  "tagFormat": "v${version}",
+  "repositoryUrl": "https://github.com/OWNER/REPO",
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    [
+      "@semantic-release/release-notes-generator",
+      { "preset": "conventionalcommits" }
+    ],
+    [
+      "@semantic-release/changelog",
+      { "changelogFile": "CHANGELOG.md" }
+    ],
+    [
+      "@semantic-release/npm",
+      { "npmPublish": false }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          { "path": "storybook-static", "label": "Storybook build" }
+        ]
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": ["CHANGELOG.md", "package.json", "pnpm-lock.yaml"],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ]
+  ]
+}

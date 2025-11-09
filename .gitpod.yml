@@ -1,0 +1,24 @@
+image: gitpod/workspace-node:20
+
+tasks:
+  - name: Install & Dev
+    init: |
+      corepack enable
+      corepack prepare pnpm@10.12.1 --activate
+      pnpm install
+    command: pnpm dev
+
+ports:
+  - port: 3000
+    onOpen: open-browser
+    name: Next.js
+  - port: 6006
+    onOpen: notify
+    name: Storybook
+
+vscode:
+  extensions:
+    - biomejs.biome
+    - dbaeumer.vscode-eslint
+    - ms-playwright.playwright
+

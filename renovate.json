@@ -1,0 +1,8 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "local>renovate-presets/shared"
+    // For org-wide preset later, replace with:
+    // "github>ORG/.github:renovate.json5"
+  ]
+}

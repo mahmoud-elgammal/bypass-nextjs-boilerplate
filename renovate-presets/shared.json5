@@ -1,0 +1,57 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "rangeStrategy": "bump",
+  "labels": ["dependencies"],
+  "dependencyDashboard": true,
+  "prConcurrentLimit": 5,
+  "stabilityDays": 2,
+  "packageRules": [
+    {
+      "matchManagers": ["npm"],
+      "matchPackagePatterns": ["^@storybook/", "^storybook$"],
+      "groupName": "storybook"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchPackagePatterns": ["^@types/", "^typescript$"],
+      "groupName": "types & ts"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchPackagePatterns": ["^@commitlint/", "^semantic-release", "^@semantic-release/"],
+      "groupName": "release tooling"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchPackagePatterns": [
+        "^next$",
+        "^@next/",
+        "^next-intl$",
+        "^react$",
+        "^react-dom$",
+        "^@types/react$",
+        "^@types/react-dom$",
+        "^eslint-config-next$",
+        "^@next/bundle-analyzer$",
+        "^@next/swc-.*",
+        "^next-seo$"
+      ],
+      "groupName": "nextjs + react core",
+      "additionalBranchPrefix": "nr/next-react-"
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["dependencies", "major"],
+      "prBodyNotes": ["Major update — review carefully before merging."]
+    }
+  ]
+}
+

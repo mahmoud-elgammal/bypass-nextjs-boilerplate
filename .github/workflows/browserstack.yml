@@ -1,0 +1,40 @@
+name: BrowserStack E2E
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-bstack:
+    runs-on: ubuntu-latest
+    env:
+      BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+      BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build and start app
+        run: |
+          pnpm build
+          nohup pnpm start &
+          sleep 5
+
+      - name: Install BrowserStack SDK
+        run: pnpm add -D @browserstack/sdk
+
+      - name: Run Playwright tests on BrowserStack
+        run: npx browserstack-sdk --config browserstack.yml
+

@@ -1,0 +1,23 @@
+pre-commit:
+  parallel: true
+  commands:
+    biome_format:
+      glob: "**/*.{ts,tsx,js,jsx,css,md,json}"
+      run: pnpm exec biome format --write {staged_files}
+      stage_fixed: true
+    biome_lint:
+      glob: "**/*.{ts,tsx,js,jsx}"
+      run: pnpm exec biome check {staged_files}
+
+pre-push:
+  parallel: true
+  commands:
+    typecheck:
+      run: pnpm exec tsc -p tsconfig.json --noEmit
+    i18n:
+      run: pnpm i18n:check
+
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm exec commitlint --edit ${LEFTHOOK_MSG_FILE:-$1}

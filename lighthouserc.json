@@ -1,0 +1,25 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "http://localhost:3000/en"
+      ],
+      "numberOfRuns": 2,
+      "startServerCommand": "pnpm start",
+      "startServerReadyPattern": "http://localhost:3000",
+      "settings": {
+        "preset": "desktop"
+      }
+    },
+    "assert": {
+      "preset": "lighthouse:recommended",
+      "assertions": {
+        "csp-xss": "warn"
+      }
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    }
+  }
+}
+
