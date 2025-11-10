@@ -1,5 +1,7 @@
-import { config, proxy } from "./src/proxy";
+import { proxy } from "./src/proxy";
 import {
+  chain,
+  continued,
   chainMatch,
   isPageRequest,
   csp,
@@ -38,10 +40,13 @@ import {
 //   },
 // });
 
-const securityMiddleware = [csp(), strictDynamic(), reporting()];
+const security = chainMatch(isPageRequest)(
+  strictDynamic(),
+  strictInlineStyles(),
+  csp(),
+  reporting(),
+);
 
-export default function middleware(req: any, ev: any) {
-  const res = proxy(req);
-  // Apply security headers via next-safe-middleware
-  return res;
-}
+export default chain(continued(proxy), continued(security));
+
+// export { config } from "./src/proxy";

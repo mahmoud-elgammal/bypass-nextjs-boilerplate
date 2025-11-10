@@ -1,12 +1,16 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { NextIntlConfig } from "./i18n/config";
-import { CSRF_COOKIE, randomToken } from "./lib/csrf";
+import { CSRF_COOKIE } from "./lib/csrf";
 
 function negotiateLocale(req: NextRequest) {
+  const locales = (NextIntlConfig as any).locales as string[];
+  const cookiePref = req.cookies.get("Next-Locale")?.value;
+  if (cookiePref && locales.includes(cookiePref)) return cookiePref;
+
   const header = req.headers.get("accept-language") || "";
   const lower = header.toLowerCase();
-  for (const l of (NextIntlConfig as any).locales as string[]) {
+  for (const l of locales) {
     if (lower.includes(`${l}`)) return l;
   }
   return (NextIntlConfig as any).defaultLocale as string;
@@ -15,7 +19,18 @@ function negotiateLocale(req: NextRequest) {
 function ensureCsrf(req: NextRequest, res: NextResponse) {
   const cookie = req.cookies.get(CSRF_COOKIE)?.value;
   if (!cookie) {
-    res.cookies.set(CSRF_COOKIE, randomToken(), {
+    // Generate a random token synchronously using Web Crypto
+    let token = "";
+    try {
+      const bytes = new Uint8Array(16);
+      crypto.getRandomValues(bytes);
+      token = Array.from(bytes)
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+    } catch {
+      token = Math.random().toString(36).slice(2);
+    }
+    res.cookies.set(CSRF_COOKIE, token, {
       path: "/",
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
@@ -37,20 +52,35 @@ export function proxy(req: NextRequest) {
     return ensureCsrf(req, NextResponse.next());
   }
 
-  // return NextResponse.next();
-
   const first = pathname.split("/")[1] || "";
 
   const isLocale = NextIntlConfig.locales.includes(first);
 
-  if (isLocale) return ensureCsrf(req, NextResponse.next());
+  if (isLocale) {
+    const requestHeaders = new Headers(req.headers);
+    requestHeaders.set("X-Next-Locale", first);
+    const res = NextResponse.next({ request: { headers: requestHeaders } });
+    const existing = req.cookies.get("Next-Locale")?.value;
+    if (existing !== first) {
+      res.cookies.set("Next-Locale", first, {
+        path: "/",
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+      });
+    }
+    return ensureCsrf(req, res);
+  }
 
-  const locale = negotiateLocale(req);
+  const locale = (NextIntlConfig as any).defaultLocale || "en";
   const url = req.nextUrl.clone();
   url.pathname = `/${locale}${pathname}`;
   const res = NextResponse.redirect(url);
   res.headers.set("X-Next-Locale", locale);
-  res.cookies.set("NEXT_LOCALE", locale, { path: "/" });
+  res.cookies.set("Next-Locale", locale, {
+    path: "/",
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+  });
   return ensureCsrf(req, res);
 }
 

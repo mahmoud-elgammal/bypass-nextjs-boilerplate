@@ -52,6 +52,7 @@ export const usePreferences = create<State & Actions>()(
         set({ locale });
         // Store a cookie so middleware can pick it up on SSR navigations
         try {
+          document.cookie = `Next-Locale=${locale}; path=/`;
           document.cookie = `NEXT_LOCALE=${locale}; path=/`;
           // Also reflect in <html lang> when possible (non-blocking)
           document.documentElement.lang = locale;
@@ -75,8 +76,10 @@ export const usePreferences = create<State & Actions>()(
         if (opts?.locale) locale = opts.locale;
         else {
           try {
-            const m = document.cookie.match(/(?:^|; )NEXT_LOCALE=([^;]+)/);
-            if (m && m[1]) locale = decodeURIComponent(m[1]);
+            const m1 = document.cookie.match(/(?:^|; )Next-Locale=([^;]+)/);
+            const m2 = document.cookie.match(/(?:^|; )NEXT_LOCALE=([^;]+)/);
+            const v = m1?.[1] ?? m2?.[1];
+            if (v) locale = decodeURIComponent(v);
           } catch {
             // ignore
           }
@@ -103,4 +106,3 @@ export const usePreferences = create<State & Actions>()(
     },
   ),
 );
-

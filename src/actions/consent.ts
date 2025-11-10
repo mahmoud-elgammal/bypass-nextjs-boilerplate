@@ -6,10 +6,16 @@ import { CSRF_COOKIE } from "@/lib/csrf";
 const CONSENT_COOKIE = "CONSENT";
 const LOCALE_COOKIE = "NEXT_LOCALE";
 
-function assertCsrf(formData: FormData) {
+async function assertCsrf(formData: FormData) {
   const csrfFromForm = formData.get("_csrf");
-  const csrfCookie = cookies().get(CSRF_COOKIE)?.value;
-  if (!csrfFromForm || typeof csrfFromForm !== "string" || !csrfCookie || csrfFromForm !== csrfCookie) {
+  const cookie = await cookies();
+  const csrfCookie = cookie.get(CSRF_COOKIE)?.value;
+  if (
+    !csrfFromForm ||
+    typeof csrfFromForm !== "string" ||
+    !csrfCookie ||
+    csrfFromForm !== csrfCookie
+  ) {
     throw new Error("Invalid CSRF token");
   }
 }

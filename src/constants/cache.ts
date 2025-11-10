@@ -5,4 +5,3 @@ export const CACHE_TAGS = {
 export const REVALIDATE = {
   SITE_INFO_SECONDS: 600, // 10 minutes
 } as const;
-

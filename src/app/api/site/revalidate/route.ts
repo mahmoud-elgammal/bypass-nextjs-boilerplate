@@ -1,8 +1,9 @@
 import { NextResponse, NextRequest } from "next/server";
-import { revalidateTag } from "next/cache";
+import { revalidateTag, revalidatePath } from "next/cache";
 import { CACHE_TAGS } from "@/constants/cache";
 import { CSRF_COOKIE } from "@/lib/csrf";
 import { clientKeyFromHeaders, rateLimit } from "@/lib/rateLimit";
+import { NextIntlConfig } from "@/i18n/config";
 
 export async function POST(req: NextRequest) {
   const key = clientKeyFromHeaders(req.headers);
@@ -14,5 +15,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid CSRF token" }, { status: 403 });
   }
   revalidateTag(CACHE_TAGS.SITE_INFO, {});
-  return NextResponse.json({ revalidated: true, tags: [CACHE_TAGS.SITE_INFO] });
+  // Proactively ISR-revalidate the localized home pages as well
+  for (const l of NextIntlConfig.locales) {
+    revalidatePath(`/${l}`);
+  }
+  return NextResponse.json({ revalidated: true, tags: [CACHE_TAGS.SITE_INFO], paths: NextIntlConfig.locales.map((l) => `/${l}`) });
 }

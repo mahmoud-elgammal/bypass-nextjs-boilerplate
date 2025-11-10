@@ -9,6 +9,6 @@ export async function getSiteInfoAction() {
 }
 
 export async function revalidateSiteInfoAction() {
-  revalidateTag(CACHE_TAGS.SITE_INFO);
+  revalidateTag(CACHE_TAGS.SITE_INFO, {});
   return { ok: true } as const;
 }

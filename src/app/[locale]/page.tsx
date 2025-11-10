@@ -3,6 +3,11 @@ import dynamic from "next/dynamic";
 import ThemeToggle from "@/components/ThemeToggle";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 import Greeting from "@/components/Greeting.client";
+import {
+  getI18n,
+  getStaticParams,
+  setStaticParamsLocale,
+} from "@/i18n/next-international.server";
 
 const SiteInfoClient = dynamic(() => import("@/components/SiteInfoClient"));
 
@@ -12,6 +17,8 @@ export default async function Home({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  setStaticParamsLocale(locale);
+  const t = await getI18n();
 
   return (
     <main className="flex min-h-screen items-center justify-center px-6">
@@ -31,10 +38,10 @@ export default async function Home({
           />
         </div>
         <h1 className="mb-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-          {"Simple Next.js Project"}
+          {t("common.title")}
         </h1>
         <p className="mx-auto mb-8 max-w-md text-base leading-7 text-zinc-600 dark:text-zinc-400">
-          {"A clean foundation with Tailwind and dark mode."} {"Edit"} — {"Batteries-included minimal baseline"}
+          {t("common.blurb")} {t("common.edit")} — {t("home.subtitle")}
           <code className="mx-1 rounded-md bg-black/4 px-1.5 py-0.5 text-sm">
             src/app/[locale]/page.tsx
           </code>
@@ -47,7 +54,7 @@ export default async function Home({
             target="_blank"
             rel="noopener noreferrer"
           >
-            {"Documentation"}
+            {t("common.docs")}
           </a>
           <a
             className="inline-flex h-11 items-center justify-center rounded-full border border-black/10 px-5 text-sm font-medium text-foreground transition-colors hover:bg-black/4 dark:border-white/15 dark:hover:bg-white/6"
@@ -55,7 +62,7 @@ export default async function Home({
             target="_blank"
             rel="noopener noreferrer"
           >
-            {"Templates"}
+            {t("common.templates")}
           </a>
         </div>
         <div className="mt-6">
@@ -67,4 +74,8 @@ export default async function Home({
       </section>
     </main>
   );
+}
+
+export function generateStaticParams() {
+  return getStaticParams();
 }
