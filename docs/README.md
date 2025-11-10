@@ -1,24 +1,24 @@
 # Docs
 
-This repository is a Next.js (App Router) project with TypeScript, Vitest, Storybook, and CI/CD.
+Centralized documentation for Next Edge. Each topic links to a focused page.
 
-- Development: `pnpm dev` (app at http://localhost:3000)
-- Storybook: `pnpm storybook` (http://localhost:6006)
-- Tests: `pnpm test` (use `--coverage` for coverage)
-- Lint/Format: `pnpm lint` / `pnpm format`
+- Getting Started: development basics and local setup — `docs/development.md`
+- Architecture overview: structure, routing, i18n, caching — `docs/architecture.md`
+- Testing: unit, e2e, coverage, patterns — `docs/testing.md`
+- Internationalization: locales, messages, helpers — `docs/i18n.md`
+- Security: CSP, CSRF, headers, secrets — `docs/security.md`
+- CI/CD: workflows, releases, pages, Slack — `docs/ci-cd.md`
+- Analytics & tags: GTM/GA4/PostHog — `docs/analytics.md`
+- CSP details: how to update for new vendors — `docs/csp.md`
+- Environment & config: variables and validation — `docs/environment.md`
+- Releasing: branching strategy and semantic-release — `docs/releasing.md`
+- Storybook: workflows and co-located stories — `docs/storybook.md`
+- E2E tests: Playwright locally and in CI — `docs/e2e.md`
+- Troubleshooting: common issues and fixes — `docs/troubleshooting.md`
 
-Configuration
-- Env: copy `.env.example` to `.env.local`. See `AGENTS.md` for analytics and Sentry.
-- Node: `.nvmrc` pins Node 20; CI uses Node 20.
-- Hooks: Lefthook runs format/lint on commit and checks on push.
+Quick links
+- App dev server: http://localhost:3000
+- Storybook: http://localhost:6006
+- Healthcheck: `GET /api/health` → `{ status: "ok" }`
 
-Architecture
-- App routes in `src/app`, components in `src/components`, hooks in `src/hooks`, stores in `src/stores`.
-- i18n via `next-intl` with messages under `messages/<locale>/<ns>.json`.
-- Consent-aware analytics in `src/components/Analytics.tsx` (GTM/GA4/PostHog).
-
-CI & Releases
-- CI runs lint, i18n checks, tests + coverage upload (Codecov), Storybook build.
-- Releases automated via semantic-release on `main`; Storybook deploys to `gh-pages`.
-
-See `AGENTS.md` for contributor guidelines.
+See `AGENTS.md` for full repository guidelines and guardrails.

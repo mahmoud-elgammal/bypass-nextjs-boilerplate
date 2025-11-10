@@ -20,6 +20,18 @@ export const metadata: Metadata = {
   title: "Next Edge — Minimal Next.js Starter",
   description:
     "A clean, minimalist Next.js starter with Tailwind and dark mode.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", type: "image/x-icon" },
+      { url: "/icons/icon-64.png", type: "image/png", sizes: "64x64" },
+      { url: "/icons/icon-192.png", type: "image/png", sizes: "192x192" },
+      { url: "/icons/icon-256.png", type: "image/png", sizes: "256x256" },
+      { url: "/icons/icon-512.png", type: "image/png", sizes: "512x512" },
+      { url: "/logo.svg", type: "image/svg+xml" },
+    ],
+    apple: "/icons/icon-192.png",
+    shortcut: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

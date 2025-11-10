@@ -8,7 +8,7 @@ const withBundleAnalyzer = createBundleAnalyzer({
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    instrumentationHook: true,
+    // instrumentationHook: true,
   },
   async headers() {
     const csp = [
