@@ -22,5 +22,25 @@
   },
   "[jsonc]": {
     "editor.defaultFormatter": "biomejs.biome"
-  }
+  },
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "text": "You MUST strictly follow the Conventional Commits format: <type>(<scope>): <subject>"
+    },
+    {
+      "text": "The <type> MUST be exactly one of: feat, fix, perf, refactor, docs, test, style, build, ci, chore, revert."
+    },
+    {
+      "text": "The <scope> is MANDATORY. You cannot leave it empty. It MUST be exactly one of: actions, app, components, constants, i18n, lib, providers, queries, schemas, stores, utils, api, messages, config, ci, deps, repo, docs, tests."
+    },
+    {
+      "text": "The <subject> MUST be completely in lower-case letters."
+    },
+    {
+      "text": "The <subject> MUST NOT end with a period or full-stop."
+    },
+    {
+      "text": "Do NOT wrap the output in markdown code blocks. Output only the raw text."
+    }
+  ]
 }

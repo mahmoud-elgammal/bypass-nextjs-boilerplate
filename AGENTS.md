@@ -50,10 +50,8 @@
 
 ### Commitlint
 - Conventional commits enforced via Commitlint (`.commitlintrc.cjs`). Examples: `feat(app): add locale switcher`, `fix(components): handle null props`.
-- Allowed types: `feat, fix, perf, refactor, docs, test, style, build, ci, chore, revert`.
-- Required scopes (lower-kebab-case): `actions, app, components, constants, i18n, lib, providers, queries, schemas, stores, utils, api, messages, config, ci, deps, repo, docs, tests`.
-- Subject must be lower-case, no trailing period, header ≤ 100 chars.
 - Local hook: `commit-msg` runs Commitlint (Lefthook). CI also validates commit messages.
+- Commit rule: You MUST read and strictly follow the rules in `.agent/rules/commitlint/rule.md` before generating ANY commit message.
 
 ## Security & Configuration Tips
 - Copy `.env.example` to `.env.local`; never commit secrets.
