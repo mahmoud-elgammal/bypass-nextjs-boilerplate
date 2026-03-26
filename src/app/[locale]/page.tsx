@@ -23,7 +23,12 @@ export default async function Home() {
 
       {/* Noise Texture Overlay */}
       <div className="absolute inset-0 z-10 opacity-[0.03] pointer-events-none mix-blend-overlay">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+          role="img"
+          aria-label="Overlay"
+        >
           <filter id="noise">
             <feTurbulence
               type="fractalNoise"

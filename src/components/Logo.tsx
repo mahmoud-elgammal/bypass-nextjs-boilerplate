@@ -34,6 +34,8 @@ export default function Logo({ className = "", size = "md" }: LogoProps) {
             className="w-[60%] h-[60%] text-white"
             initial="hidden"
             animate="visible"
+            role="img"
+            aria-label="logo"
           >
             <motion.path
               d="M12 2L14.5 9H9.5L12 2Z"
@@ -92,7 +94,7 @@ export default function Logo({ className = "", size = "md" }: LogoProps) {
           <div className="flex">
             {"Bypass".split("").map((c, i) => (
               <motion.span
-                key={i}
+                key={`logo-letter-${c}`}
                 variants={{
                   hidden: { opacity: 1, x: 5 },
                   visible: { opacity: 1, x: 0 },
