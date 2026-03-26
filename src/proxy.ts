@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { NextIntlConfig } from "./i18n/config";
 import { CSRF_COOKIE } from "./lib/csrf";
 
-function negotiateLocale(req: NextRequest) {
+function _negotiateLocale(req: NextRequest) {
   const locales = (NextIntlConfig as any).locales as string[];
   const cookiePref = req.cookies.get("Next-Locale")?.value;
   if (cookiePref && locales.includes(cookiePref)) return cookiePref;

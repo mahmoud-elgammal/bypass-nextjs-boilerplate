@@ -16,7 +16,7 @@ module.exports = {
         "build",
         "ci",
         "chore",
-        "revert"
+        "revert",
       ],
     ],
     // Require a scope and restrict to repo modules
@@ -43,7 +43,7 @@ module.exports = {
         "deps",
         "repo",
         "docs",
-        "tests"
+        "tests",
       ],
     ],
     // Keep subject tidy

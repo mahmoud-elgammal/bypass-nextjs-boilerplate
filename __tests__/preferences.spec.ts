@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { usePreferences } from "../src/stores/usePreferences";
 
 function clearCookies() {
@@ -6,6 +6,7 @@ function clearCookies() {
   for (const c of cookies) {
     const eqPos = c.indexOf("=");
     const name = eqPos > -1 ? c.substr(0, eqPos) : c;
+    // biome-ignore lint/suspicious/noDocumentCookie: intentional for test setup
     document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
   }
 }
@@ -42,6 +43,7 @@ describe("usePreferences store", () => {
 
   it("hydrateFromEnv derives values from storage and cookies", () => {
     localStorage.setItem("theme", "light");
+    // biome-ignore lint/suspicious/noDocumentCookie: intentional for test setup
     document.cookie = "NEXT_LOCALE=ar; path=/";
 
     usePreferences.getState().hydrateFromEnv();
@@ -52,4 +54,3 @@ describe("usePreferences store", () => {
     expect(document.documentElement.dataset.theme).toBe("light");
   });
 });
-

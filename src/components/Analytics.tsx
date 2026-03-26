@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
 import Script from "next/script";
+import { useEffect } from "react";
 import { useConsent } from "@/stores/useConsent";
 
 let sentryInited = false;
@@ -32,7 +32,8 @@ export default function Analytics() {
   const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
   const gtagId = process.env.NEXT_PUBLIC_GTAG_ID;
   const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
-  const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://app.posthog.com";
+  const posthogHost =
+    process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://app.posthog.com";
 
   if (!analytics) return null;
 
@@ -40,7 +41,11 @@ export default function Analytics() {
     <>
       {gtmId && (
         <>
-          <Script id="gtm-datalayer" type="text/partytown" strategy="afterInteractive">{`
+          <Script
+            id="gtm-datalayer"
+            type="text/partytown"
+            strategy="afterInteractive"
+          >{`
               (function(w,d,s,l,i){
                 w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
               })(window,document,'script','dataLayer','${gtmId}');
@@ -64,8 +69,16 @@ export default function Analytics() {
 
       {!gtmId && gtagId && (
         <>
-          <Script src={`https://www.googletagmanager.com/gtag/js?id=${gtagId}`} type="text/partytown" strategy="afterInteractive" />
-          <Script id="gtag-init" type="text/partytown" strategy="afterInteractive">{`
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${gtagId}`}
+            type="text/partytown"
+            strategy="afterInteractive"
+          />
+          <Script
+            id="gtag-init"
+            type="text/partytown"
+            strategy="afterInteractive"
+          >{`
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
@@ -76,8 +89,16 @@ export default function Analytics() {
 
       {posthogKey && (
         <>
-          <Script src="https://cdn.posthog.com/posthog.js" type="text/partytown" strategy="afterInteractive" />
-          <Script id="posthog-init" type="text/partytown" strategy="afterInteractive">{`
+          <Script
+            src="https://cdn.posthog.com/posthog.js"
+            type="text/partytown"
+            strategy="afterInteractive"
+          />
+          <Script
+            id="posthog-init"
+            type="text/partytown"
+            strategy="afterInteractive"
+          >{`
               (function(){
                 if (!window.posthog) return;
                 try { window.posthog.init('${posthogKey}', { api_host: '${posthogHost}', capture_pageview: true, respect_dnt: true }); } catch(e) {}

@@ -12,8 +12,13 @@ export async function register() {
       dsn,
       tracesSampleRate: 1.0,
       profilesSampleRate: 0.5,
-      release: process.env.SENTRY_RELEASE || process.env.VERCEL_GIT_COMMIT_SHA || process.env.GITHUB_SHA,
-      enabled: process.env.NODE_ENV === "production" || process.env.ENABLE_SENTRY === "true",
+      release:
+        process.env.SENTRY_RELEASE ||
+        process.env.VERCEL_GIT_COMMIT_SHA ||
+        process.env.GITHUB_SHA,
+      enabled:
+        process.env.NODE_ENV === "production" ||
+        process.env.ENABLE_SENTRY === "true",
     } as any);
   } catch {
     // ignore init errors in instrumentation

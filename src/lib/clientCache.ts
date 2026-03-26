@@ -26,8 +26,11 @@ export function writeCache<T>(url: string, entry: CacheEntry<T>) {
   }
 }
 
-export async function fetchJsonWithCache<T>(url: string, ttlMs = 5 * 60 * 1000): Promise<{ data: T; fromCache: boolean; refresh: () => Promise<T> }> {
-  const cached = typeof window !== 'undefined' ? readCache<T>(url) : null;
+export async function fetchJsonWithCache<T>(
+  url: string,
+  ttlMs = 5 * 60 * 1000,
+): Promise<{ data: T; fromCache: boolean; refresh: () => Promise<T> }> {
+  const cached = typeof window !== "undefined" ? readCache<T>(url) : null;
 
   async function doFetch(): Promise<T> {
     const headers: Record<string, string> = {};
@@ -39,7 +42,8 @@ export async function fetchJsonWithCache<T>(url: string, ttlMs = 5 * 60 * 1000):
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const etag = res.headers.get("ETag") || undefined;
     const data = (await res.json()) as T;
-    if (typeof window !== 'undefined') writeCache<T>(url, { t: Date.now(), e: etag, d: data });
+    if (typeof window !== "undefined")
+      writeCache<T>(url, { t: Date.now(), e: etag, d: data });
     return data;
   }
 
@@ -51,4 +55,3 @@ export async function fetchJsonWithCache<T>(url: string, ttlMs = 5 * 60 * 1000):
   const data = await doFetch();
   return { data, fromCache: !!cached, refresh: doFetch };
 }
-

@@ -1,7 +1,7 @@
 "use server";
-import { getSiteInfo } from "@/queries/site";
 import { revalidateTag } from "next/cache";
 import { CACHE_TAGS } from "@/constants/cache";
+import { getSiteInfo } from "@/queries/site";
 
 export async function getSiteInfoAction() {
   // Server action wrapping cached data fetch

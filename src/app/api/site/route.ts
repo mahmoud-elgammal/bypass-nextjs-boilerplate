@@ -1,6 +1,6 @@
-import { NextResponse, NextRequest } from "next/server";
-import { getSiteInfo } from "@/queries/site";
+import { type NextRequest, NextResponse } from "next/server";
 import { etagFor } from "@/lib/etag";
+import { getSiteInfo } from "@/queries/site";
 
 export async function GET(req: NextRequest) {
   const data = await getSiteInfo();
@@ -12,6 +12,9 @@ export async function GET(req: NextRequest) {
   const res = NextResponse.json(data);
   res.headers.set("ETag", tag);
   // Allow shared caches/CDNs to keep briefly; clients can revalidate via ETag
-  res.headers.set("Cache-Control", "public, max-age=60, stale-while-revalidate=300");
+  res.headers.set(
+    "Cache-Control",
+    "public, max-age=60, stale-while-revalidate=300",
+  );
   return res;
 }

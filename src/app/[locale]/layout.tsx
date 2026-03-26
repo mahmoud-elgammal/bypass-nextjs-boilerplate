@@ -1,7 +1,10 @@
+import dynamic from "next/dynamic";
 import type { ReactNode } from "react";
 import ClientInit from "@/components/ClientInit";
-import dynamic from "next/dynamic";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 import { NextIntlConfig } from "@/i18n/config";
+import { I18nProviderClient } from "@/i18n/next-international.client";
 import ServerSiteData from "@/providers/ServerSiteData";
 import SWRProvider from "@/providers/SWRProvider.client";
 import { getSiteInfo } from "@/queries/site";
@@ -24,11 +27,17 @@ export default async function LocaleLayout({
   return (
     <div dir={dir} className="min-h-screen">
       <SWRProvider fallback={{ "/api/site": site }}>
-        <ClientInit locale={locale} />
-        <ServerSiteData locale={locale}>{children}</ServerSiteData>
-        <ConsentManager />
-        <ConsentControl />
-        <Analytics />
+        <I18nProviderClient locale={locale}>
+          <ClientInit locale={locale} />
+          <ServerSiteData locale={locale}>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+          </ServerSiteData>
+          <ConsentManager />
+          <ConsentControl />
+          <Analytics />
+        </I18nProviderClient>
       </SWRProvider>
     </div>
   );

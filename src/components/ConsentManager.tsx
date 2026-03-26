@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useConsent } from "@/stores/useConsent";
 import { saveConsentAction } from "@/actions/consent";
+import { useConsent } from "@/stores/useConsent";
 
 export default function ConsentManager() {
   const decided = useConsent((s) => s.decided);
@@ -34,7 +34,10 @@ export default function ConsentManager() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [
+    // Best-effort: read cookie if present
+    hydrateFromCookie,
+  ]);
 
   if (decided) return null;
 
@@ -49,26 +52,51 @@ export default function ConsentManager() {
           <div className="rounded-2xl border border-black/5 bg-background/95 p-4 shadow-xl backdrop-blur-md dark:border-white/10 sm:p-5">
             <div className="flex flex-col gap-4">
               <div className="flex items-start gap-3">
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/5 text-lg dark:bg-white/10">🔒</span>
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/5 text-lg dark:bg-white/10">
+                  🔒
+                </span>
                 <div className="text-sm text-foreground">
                   <strong className="mb-0.5 block text-base font-semibold tracking-tight">
                     {"We use cookies"}
                   </strong>
-                  <span className="text-zinc-600 dark:text-zinc-400">{"We use cookies to enhance your experience, analyze traffic and show relevant content."}</span>
+                  <span className="text-zinc-600 dark:text-zinc-400">
+                    {
+                      "We use cookies to enhance your experience, analyze traffic and show relevant content."
+                    }
+                  </span>
                 </div>
               </div>
 
-              <form ref={formRef} action={saveConsentAction} className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
+              <form
+                ref={formRef}
+                action={saveConsentAction}
+                className="flex flex-wrap items-center justify-end gap-2 sm:gap-3"
+              >
                 <input type="hidden" name="_csrf" value={csrf} />
-                <input type="hidden" name="payload" value={JSON.stringify({ analytics: consent.analytics, marketing: consent.marketing, preferences: consent.preferences })} />
+                <input
+                  type="hidden"
+                  name="payload"
+                  value={JSON.stringify({
+                    analytics: consent.analytics,
+                    marketing: consent.marketing,
+                    preferences: consent.preferences,
+                  })}
+                />
                 <button
                   type="button"
                   className="inline-flex h-9 items-center justify-center rounded-full bg-foreground px-4 text-sm font-medium text-background shadow-sm transition-opacity hover:opacity-95"
                   onClick={() => {
                     acceptAll();
                     if (formRef.current) {
-                      const i = formRef.current.elements.namedItem("payload") as HTMLInputElement | null;
-                      if (i) i.value = JSON.stringify({ analytics: true, marketing: true, preferences: true });
+                      const i = formRef.current.elements.namedItem(
+                        "payload",
+                      ) as HTMLInputElement | null;
+                      if (i)
+                        i.value = JSON.stringify({
+                          analytics: true,
+                          marketing: true,
+                          preferences: true,
+                        });
                       formRef.current.requestSubmit();
                     }
                   }}
@@ -81,8 +109,15 @@ export default function ConsentManager() {
                   onClick={() => {
                     rejectAll();
                     if (formRef.current) {
-                      const i = formRef.current.elements.namedItem("payload") as HTMLInputElement | null;
-                      if (i) i.value = JSON.stringify({ analytics: false, marketing: false, preferences: false });
+                      const i = formRef.current.elements.namedItem(
+                        "payload",
+                      ) as HTMLInputElement | null;
+                      if (i)
+                        i.value = JSON.stringify({
+                          analytics: false,
+                          marketing: false,
+                          preferences: false,
+                        });
                       formRef.current.requestSubmit();
                     }
                   }}
@@ -152,9 +187,15 @@ export default function ConsentManager() {
                         setDecided(true);
                         // Ensure payload reflects latest toggles
                         if (formRef.current) {
-                          const i = formRef.current.elements.namedItem("payload") as HTMLInputElement | null;
+                          const i = formRef.current.elements.namedItem(
+                            "payload",
+                          ) as HTMLInputElement | null;
                           if (i)
-                            i.value = JSON.stringify({ analytics: consent.analytics, marketing: consent.marketing, preferences: consent.preferences });
+                            i.value = JSON.stringify({
+                              analytics: consent.analytics,
+                              marketing: consent.marketing,
+                              preferences: consent.preferences,
+                            });
                           formRef.current.requestSubmit();
                         }
                       }}
@@ -218,11 +259,17 @@ function ConsentSwitch({
   return (
     <label className="flex items-center justify-between gap-3 rounded-xl border border-black/10 p-3 dark:border-white/10">
       <span className="flex items-start gap-3 text-sm">
-        <span className={`inline-flex h-8 w-8 items-center justify-center rounded-lg ${toneBg}`}>{glyph}</span>
+        <span
+          className={`inline-flex h-8 w-8 items-center justify-center rounded-lg ${toneBg}`}
+        >
+          {glyph}
+        </span>
         <span>
           <span className="block font-medium leading-5">{label}</span>
           {hint ? (
-            <span className="text-xs text-zinc-600 dark:text-zinc-400">{hint}</span>
+            <span className="text-xs text-zinc-600 dark:text-zinc-400">
+              {hint}
+            </span>
           ) : null}
         </span>
       </span>

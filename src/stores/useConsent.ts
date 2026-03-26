@@ -1,9 +1,13 @@
 "use client";
 
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
-export type ConsentCategory = "necessary" | "analytics" | "marketing" | "preferences";
+export type ConsentCategory =
+  | "necessary"
+  | "analytics"
+  | "marketing"
+  | "preferences";
 
 type Consent = Record<Exclude<ConsentCategory, "necessary">, boolean> & {
   necessary: true;
@@ -25,8 +29,8 @@ type Actions = {
 
 function readCookie(name: string): string | null {
   try {
-    const m = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]+)"));
-    return m && m[1] ? decodeURIComponent(m[1]) : null;
+    const m = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]+)`));
+    return m?.[1] ? decodeURIComponent(m[1]) : null;
   } catch {
     return null;
   }
@@ -55,12 +59,22 @@ export const useConsent = create<State & Actions>()(
       consent: defaultConsent,
       decided: false,
       acceptAll: () => {
-        const next: Consent = { necessary: true, analytics: true, marketing: true, preferences: true };
+        const next: Consent = {
+          necessary: true,
+          analytics: true,
+          marketing: true,
+          preferences: true,
+        };
         set({ consent: next, decided: true });
         writeConsentCookie(next);
       },
       rejectAll: () => {
-        const next: Consent = { necessary: true, analytics: false, marketing: false, preferences: false };
+        const next: Consent = {
+          necessary: true,
+          analytics: false,
+          marketing: false,
+          preferences: false,
+        };
         set({ consent: next, decided: true });
         writeConsentCookie(next);
       },

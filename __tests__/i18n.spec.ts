@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { NextIntlConfig } from "../src/i18n/config";
 
 function keys(obj: Record<string, unknown>) {
@@ -6,8 +6,10 @@ function keys(obj: Record<string, unknown>) {
 }
 
 async function loadMessages(locale: string, ns: string) {
-  const mod = await import(`../messages/${locale}/${ns}.json`);
-  return (mod as any).default as Record<string, string>;
+  const mod = (await import(`../messages/${locale}/${ns}.json`)) as {
+    default: Record<string, string>;
+  };
+  return mod.default;
 }
 
 describe("i18n messages", () => {
@@ -23,12 +25,18 @@ describe("i18n messages", () => {
         const onlyInBase = baseKeys.filter((x) => !k.includes(x));
         const onlyInOther = k.filter((x) => !baseKeys.includes(x));
         const msg = [
-          onlyInBase.length ? `Missing in ${l}/${ns}: ${onlyInBase.join(", ")}` : "",
-          onlyInOther.length ? `Extra in ${l}/${ns}: ${onlyInOther.join(", ")}` : "",
+          onlyInBase.length
+            ? `Missing in ${l}/${ns}: ${onlyInBase.join(", ")}`
+            : "",
+          onlyInOther.length
+            ? `Extra in ${l}/${ns}: ${onlyInOther.join(", ")}`
+            : "",
         ]
           .filter(Boolean)
           .join(" | ");
-        expect(onlyInBase.length === 0 && onlyInOther.length === 0, msg).toBe(true);
+        expect(onlyInBase.length === 0 && onlyInOther.length === 0, msg).toBe(
+          true,
+        );
       }
     }
   });

@@ -30,8 +30,18 @@
     "marketing": "Marketing",
     "preferences": "Preferences",
     "alwaysOn": "Always on",
-    "close": "Close"
-  ,
-  "change": "Cookie settings"
+    "close": "Close",
+    "change": "Cookie settings"
+  },
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "docs": "Docs",
+    "getStarted": "Get Started"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
   }
 }

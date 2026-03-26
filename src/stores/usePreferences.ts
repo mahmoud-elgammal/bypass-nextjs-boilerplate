@@ -1,7 +1,7 @@
 "use client";
 
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 export type Theme = "light" | "dark" | "system";
 
@@ -52,7 +52,9 @@ export const usePreferences = create<State & Actions>()(
         set({ locale });
         // Store a cookie so middleware can pick it up on SSR navigations
         try {
+          // biome-ignore lint/suspicious/noDocumentCookie: intentional for middleware sync
           document.cookie = `Next-Locale=${locale}; path=/`;
+          // biome-ignore lint/suspicious/noDocumentCookie: intentional for middleware sync
           document.cookie = `NEXT_LOCALE=${locale}; path=/`;
           // Also reflect in <html lang> when possible (non-blocking)
           document.documentElement.lang = locale;
@@ -66,7 +68,8 @@ export const usePreferences = create<State & Actions>()(
         let locale = get().locale;
 
         try {
-          const stored = (localStorage.getItem("theme") as Theme | null) ?? null;
+          const stored =
+            (localStorage.getItem("theme") as Theme | null) ?? null;
           if (stored === "light" || stored === "dark") theme = stored;
           else theme = "system";
         } catch {

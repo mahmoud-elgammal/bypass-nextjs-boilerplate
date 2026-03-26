@@ -1,6 +1,6 @@
 "use server";
 
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { CSRF_COOKIE } from "@/lib/csrf";
 
 const CONSENT_COOKIE = "CONSENT";

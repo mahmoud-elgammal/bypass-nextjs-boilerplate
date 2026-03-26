@@ -1,10 +1,8 @@
-import type { Metadata } from "next";
-import Script from "next/script";
 import { Partytown } from "@qwik.dev/partytown/react";
+import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
-import { DefaultSeo } from "next-seo";
-import { defaultSeo } from "@/lib/seo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Next Edge — Minimal Next.js Starter",
+  title: "Bypass — High-Performance Next.js Boilerplate",
   description:
-    "A clean, minimalist Next.js starter with Tailwind and dark mode.",
+    "The elite Next.js 15 starter to bypass the boring setup. Optimized for edge performance with clean architecture.",
   icons: {
     icon: [
       { url: "/favicon.ico", type: "image/x-icon" },

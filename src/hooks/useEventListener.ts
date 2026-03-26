@@ -9,7 +9,9 @@ export function useEventListener<K extends keyof WindowEventMap>(
   options?: boolean | AddEventListenerOptions,
 ) {
   const saved = useRef<typeof handler>(handler);
-  useEffect(() => void (saved.current = handler), [handler]);
+  useEffect(() => {
+    saved.current = handler;
+  }, [handler]);
 
   useEffect(() => {
     const t = target();
@@ -19,4 +21,3 @@ export function useEventListener<K extends keyof WindowEventMap>(
     return () => t.removeEventListener(type as any, listener, options as any);
   }, [target, type, options]);
 }
-

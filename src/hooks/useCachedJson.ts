@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { fetchJsonWithCache } from "@/lib/clientCache";
 
 export function useCachedJson<T>(url: string, ttlMs = 5 * 60 * 1000) {
@@ -36,4 +36,3 @@ export function useCachedJson<T>(url: string, ttlMs = 5 * 60 * 1000) {
 
   return { data, loading, error, refresh } as const;
 }
-

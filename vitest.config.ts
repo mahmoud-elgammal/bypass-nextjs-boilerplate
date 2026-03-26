@@ -1,6 +1,6 @@
-import { defineConfig } from "vitest/config";
-import react from "@vitejs/plugin-react";
 import { fileURLToPath, URL } from "node:url";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vitest/config";
 
 const r = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 
@@ -8,10 +8,11 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: [
-      { find: /\.css$/,
-        replacement: r("./__mocks__/styleMock.ts") },
-      { find: /\.(png|jpe?g|gif|svg|ico|webp|avif)$/,
-        replacement: r("./__mocks__/fileMock.ts") },
+      { find: /\.css$/, replacement: r("./__mocks__/styleMock.ts") },
+      {
+        find: /\.(png|jpe?g|gif|svg|ico|webp|avif)$/,
+        replacement: r("./__mocks__/fileMock.ts"),
+      },
     ],
   },
   test: {

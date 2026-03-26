@@ -7,4 +7,3 @@ export const SiteInfoSchema = z.object({
 });
 
 export type SiteInfo = z.infer<typeof SiteInfoSchema>;
-

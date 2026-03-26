@@ -1,0 +1,66 @@
+{
+  "hero": {
+    "title": "The High-Performance Starter",
+    "description": "Build stunning, lightning-fast web applications with Next.js 15, Tailwind CSS, and Edge-first principles. Professional code, simplified architecture.",
+    "primaryCTA": "Get Started",
+    "secondaryCTA": "View Docs",
+    "badge": "New: Version 2.0 is out!"
+  },
+  "features": {
+    "title": "Built for Performance",
+    "description": "Everything you need to ship production-ready applications in record time.",
+    "items": {
+      "edge": {
+        "title": "Edge Ready",
+        "description": "Optimized for Vercel Edge Functions and global distribution."
+      },
+      "i18n": {
+        "title": "Full i18n",
+        "description": "Seamless internationalization with next-intl and RTL support."
+      },
+      "theme": {
+        "title": "Dark Mode",
+        "description": "First-class dark mode support with automatic theme detection."
+      },
+      "security": {
+        "title": "Secure by Default",
+        "description": "CSRF protection, secure headers, and environment validation."
+      },
+      "state": {
+        "title": "State Management",
+        "description": "Lightweight client state with Zustand and SWR caching."
+      },
+      "testing": {
+        "title": "Fully Tested",
+        "description": "Vitest and Playwright integrated for robust quality assurance."
+      }
+    }
+  },
+  "social": {
+    "title": "Loved by developers worldwide",
+    "trusted": "Trusted by teams at",
+    "testimonials": {
+      "one": {
+        "content": "Bypass simplified our entire global deployment. The edge-first approach is a game-changer.",
+        "author": "Sarah Chen",
+        "role": "CTO at TechFlow"
+      },
+      "two": {
+        "content": "The best Next.js boilerplate I've ever used. The i18n and RTL support are top-notch.",
+        "author": "Ahmed Mansour",
+        "role": "Lead Developer"
+      },
+      "three": {
+        "content": "Clean code, great architecture, and beautiful components. Highly recommended!",
+        "author": "Julia Smith",
+        "role": "Fullstack Engineer"
+      }
+    }
+  },
+  "cta": {
+    "title": "Ready to build your next big idea?",
+    "description": "Join thousands of developers building the future of the web with Bypass.",
+    "primaryCTA": "Start Building Now",
+    "secondaryCTA": "View Examples"
+  }
+}

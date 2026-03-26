@@ -13,4 +13,3 @@ type Story = StoryObj<typeof ThemeToggle>;
 export const Default: Story = {
   args: {},
 };
-

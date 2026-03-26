@@ -1,14 +1,14 @@
-import { proxy } from "./src/proxy";
 import {
   chain,
-  continued,
   chainMatch,
-  isPageRequest,
+  continued,
   csp,
+  isPageRequest,
   reporting,
   strictDynamic,
   strictInlineStyles,
 } from "@next-safe/middleware";
+import { proxy } from "./src/proxy";
 
 // const security = csp({
 //   contentSecurityPolicy: {

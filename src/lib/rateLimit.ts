@@ -18,8 +18,7 @@ export function rateLimit(key: string, limit = 10, windowMs = 60_000) {
 }
 
 export function clientKeyFromHeaders(headers: Headers) {
-  const fwd = headers.get('x-forwarded-for');
-  const ip = fwd?.split(',')[0]?.trim() || 'unknown';
+  const fwd = headers.get("x-forwarded-for");
+  const ip = fwd?.split(",")[0]?.trim() || "unknown";
   return ip;
 }
-

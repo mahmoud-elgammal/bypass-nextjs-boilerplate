@@ -1,8 +1,8 @@
 import type { Preview } from "@storybook/react";
-import { NextIntlClientProvider } from "next-intl";
+import { I18nProviderClient } from "../src/i18n/next-international.client";
 import "../src/app/globals.css";
 
-const messages = {
+const _messages = {
   common: {
     theme_system: "System",
     theme_light: "Light",
@@ -22,12 +22,11 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => (
-      <NextIntlClientProvider locale="en" messages={messages as any}>
+      <I18nProviderClient locale="en">
         <Story />
-      </NextIntlClientProvider>
+      </I18nProviderClient>
     ),
   ],
 };
 
 export default preview;
-

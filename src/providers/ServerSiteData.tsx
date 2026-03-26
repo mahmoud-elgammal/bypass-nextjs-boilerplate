@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { getSiteInfo } from "@/queries/site";
 import { SiteDataProvider } from "@/providers/SiteDataContext.client";
+import { getSiteInfo } from "@/queries/site";
 
 export default async function ServerSiteData({
   children,

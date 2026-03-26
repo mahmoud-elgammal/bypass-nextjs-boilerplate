@@ -5,4 +5,3 @@ export function etagFor(payload: unknown) {
   const hash = createHash("sha1").update(json).digest("hex");
   return `W/"${hash}"`;
 }
-

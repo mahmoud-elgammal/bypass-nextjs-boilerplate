@@ -1,6 +1,6 @@
 // test setup (kept intentionally minimal)
-import { vi, beforeAll, afterAll, afterEach } from "vitest";
-import '@testing-library/jest-dom';
+import { afterAll, afterEach, beforeAll, vi } from "vitest";
+import "@testing-library/jest-dom";
 
 // No-op next/script in test env
 vi.mock("next/script", () => ({ default: () => null }));
@@ -22,10 +22,10 @@ Object.defineProperty(window, "matchMedia", {
 
 // MSW server
 try {
-  const { setupServer } = await import('msw/node');
-  const { handlers } = await import('./__tests__/msw/handlers');
+  const { setupServer } = await import("msw/node");
+  const { handlers } = await import("./__tests__/msw/handlers");
   const server = setupServer(...handlers);
-  beforeAll(() => server.listen({ onUnhandledRequest: 'bypass' }));
+  beforeAll(() => server.listen({ onUnhandledRequest: "bypass" }));
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 } catch {}
