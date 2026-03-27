@@ -1,23 +1,11 @@
 import { Partytown } from "@qwik.dev/partytown/react";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "Bypass — High-Performance Next.js Boilerplate",
-  description:
-    "The elite Next.js 15 starter to bypass the boring setup. Optimized for edge performance with clean architecture.",
+  title: "Bypass Next.js Boilerplate | Home",
+  description: "Bypass Next.js Boilerplate starter to bypass the boring setup.",
   icons: {
     icon: [
       { url: "/favicon.ico", type: "image/x-icon" },
@@ -32,7 +20,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -45,14 +33,15 @@ export default function RootLayout({
           forward={["dataLayer.push", "gtag", "posthog.capture"]}
         />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans bg-background text-foreground`}
-      >
+      <body>
         <Script id="theme-init" strategy="beforeInteractive">
           {`(function(){try{var t=localStorage.getItem('theme');var d=document.documentElement;if(t==='light'||t==='dark'){d.dataset.theme=t;}else{d.removeAttribute('data-theme');}}catch(e){}})();`}
         </Script>
+
         {children}
       </body>
     </html>
   );
 }
+
+export default RootLayout;

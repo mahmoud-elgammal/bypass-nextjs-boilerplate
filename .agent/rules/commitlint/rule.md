@@ -2,20 +2,51 @@
 trigger: always_on
 ---
 
-# Commit Message Rules
+# Strict Commit Message Generation Rule
 
-Generate commit messages strictly following the Conventional Commits format to pass the commitlint hook.
+You are an expert developer generating commit messages. You MUST strictly adhere to the Conventional Commits format and the project's `commitlint` configuration. If you fail, the commit hook will reject the commit.
 
-Format: `<type>(<scope>): <subject>`
+## Format Requirements
+`<type>(<scope>): <subject>`
 
-Constraints:
-1. type: Must be EXACTLY one of: feat, fix, perf, refactor, docs, test, style, build, ci, chore, revert.
-2. scope: Mandatory. Must be EXACTLY one of: actions, app, components, constants, i18n, lib, providers, queries, schemas, stores, utils, api, messages, config, ci, deps, repo, docs, tests.
-3. subject: MUST be entirely lower-case.
-4. subject-full-stop: Do NOT end the subject line with a period (.).
-5. header-max-length: The first line (header) must be 100 characters or less.
-6. body-max-line-length: Body lines must be 120 characters or less.
-7. footer-max-line-length: Footer lines must be 120 characters or less.
-8. body-leading-blank: If there is a body, there MUST be a blank line between the header and the body.
-9. footer-leading-blank: If there is a footer, there MUST be a blank line before it.
-10. output: Provide ONLY the raw commit message without any markdown formatting or code blocks.
+[optional blank line]
+[optional body]
+
+[optional blank line]
+[optional footer]
+
+## Allowed Values
+- **type**: MUST be exactly one of: `feat`, `fix`, `perf`, `refactor`, `docs`, `test`, `style`, `build`, `ci`, `chore`, `revert`.
+- **scope**: MANDATORY. MUST be exactly one of: `actions`, `app`, `components`, `constants`, `i18n`, `lib`, `providers`, `queries`, `schemas`, `stores`, `utils`, `api`, `messages`, `config`, `ci`, `deps`, `repo`, `docs`, `tests`.
+
+## Strict Constraints
+1. **Subject Case**: The `<subject>` MUST be completely in lower-case. No uppercase letters allowed anywhere in the subject.
+2. **No Period**: Do NOT end the `<subject>` with a period (`.`).
+3. **Lengths**:
+   - Header (first line) MUST be <= 100 characters.
+   - Body lines MUST be <= 120 characters.
+   - Footer lines MUST be <= 120 characters.
+4. **Spacing**:
+   - If providing a body, there MUST be exactly one blank line between the header and the body.
+   - If providing a footer, there MUST be exactly one blank line before the footer.
+
+## Strict Output Requirements
+- Output ONLY the raw commit message.
+- Do NOT wrap the message in markdown code blocks (e.g., no ```bash or ```).
+- Do NOT include any introductory explanations, greetings, or conversational text.
+
+## Examples
+
+**GOOD:**
+feat(components): add primary button variant
+
+**GOOD (with body):**
+fix(api): resolve timeout issue on user fetch
+
+increased the timeout threshold from 5s to 10s to handle slow network conditions.
+
+**BAD (Will be rejected):**
+- `Feat(components): Add primary button` (Rejection reason: Uppercase letters in subject and type)
+- `fix(API): fix timeout.` (Rejection reason: Uppercase scope, subject has uppercase, ends with period)
+- `chore: update dependencies` (Rejection reason: Missing scope)
+- `chore(database): update schema` (Rejection reason: Invalid scope 'database')
