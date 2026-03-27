@@ -3,18 +3,7 @@ import { NextResponse } from "next/server";
 import { NextIntlConfig } from "./i18n/config";
 import { CSRF_COOKIE } from "./lib/csrf";
 
-function _negotiateLocale(req: NextRequest) {
-  const locales = (NextIntlConfig as any).locales as string[];
-  const cookiePref = req.cookies.get("Next-Locale")?.value;
-  if (cookiePref && locales.includes(cookiePref)) return cookiePref;
-
-  const header = req.headers.get("accept-language") || "";
-  const lower = header.toLowerCase();
-  for (const l of locales) {
-    if (lower.includes(`${l}`)) return l;
-  }
-  return (NextIntlConfig as any).defaultLocale as string;
-}
+export const runtime = "experimental-edge";
 
 function ensureCsrf(req: NextRequest, res: NextResponse) {
   const cookie = req.cookies.get(CSRF_COOKIE)?.value;
@@ -40,7 +29,7 @@ function ensureCsrf(req: NextRequest, res: NextResponse) {
   return res;
 }
 
-export function proxy(req: NextRequest) {
+export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // // Skip Next internals, API, and file requests
@@ -71,7 +60,7 @@ export function proxy(req: NextRequest) {
     return ensureCsrf(req, res);
   }
 
-  const locale = (NextIntlConfig as any).defaultLocale || "en";
+  const locale = NextIntlConfig.defaultLocale;
   const url = req.nextUrl.clone();
   url.pathname = `/${locale}${pathname}`;
   const res = NextResponse.redirect(url);
