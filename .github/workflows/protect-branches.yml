@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Configure branch protection (requires ADMIN_TOKEN)
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         env:
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
         with:
